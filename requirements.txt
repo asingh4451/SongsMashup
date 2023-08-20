@@ -50,7 +50,6 @@ Deprecated==1.2.13
 deprecation==2.1.0
 deta==1.1.0
 distlib==0.3.6
-dlib @ file:///C:/Users/Lenovo/MachineLearning/dlib-19.22.99-cp310-cp310-win_amd64.whl
 dnspython==2.2.1
 docopt==0.6.2
 docutils==0.19
