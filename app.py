@@ -1,4 +1,4 @@
-from flask import Flask,request,redirect,render_template
+from flask import Flask,request,redirect,render_template,send_file
 import zipfile
 import smtplib
 import numpy as np
@@ -22,7 +22,7 @@ def index():
         singer=request.form['singer']
         Number_vid=int(request.form['Number_vid'])
         duration=int(request.form['duration'])
-        email=request.form['email']
+        #email=request.form['email']
         results1 = YoutubeSearch(singer, max_results=Number_vid).to_dict()
         data=pd.DataFrame(results1)
         for i in range(1,(data['url_suffix'].count())):
@@ -68,30 +68,41 @@ def index():
                 os.remove(os.path.join(dir, item))
         with zipfile.ZipFile('output.zip', 'w') as zipf:
             zipf.write('output.mp3')
-        msg = MIMEMultipart()
-        msg['From'] = "noobbobby241@gmail.com"
-        msg['To'] = COMMASPACE.join([email])
-        msg['Date'] = formatdate(localtime=True)
-        msg['Subject'] = "Downloaded and Converted Audio"
+        # msg = MIMEMultipart()
+        # msg['From'] = "noobbobby241@gmail.com"
+        # msg['To'] = COMMASPACE.join([email])
+        # msg['Date'] = formatdate(localtime=True)
+        # msg['Subject'] = "Downloaded and Converted Audio"
 
-        with open("output.zip", "rb") as f:
-            part = MIMEBase('application', "octet-stream")
-            part.set_payload(f.read())
+        # with open("output.zip", "rb") as f:
+        #     part = MIMEBase('application', "octet-stream")
+        #     part.set_payload(f.read())
 
-            encoders.encode_base64(part)
-            part.add_header('Content-Disposition', 'attachment', filename="output.zip")
-            msg.attach(part)
-        smtp = smtplib.SMTP('smtp.gmail.com', 587)
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.ehlo()
-        smtp.login("noobbobby241@gmail.com", "cliwqftyqujpisht")
-        smtp.sendmail("noobbobby241@gmail.com", [email], msg.as_string())
-        print("Email Sent")
+        #     encoders.encode_base64(part)
+        #     part.add_header('Content-Disposition', 'attachment', filename="output.zip")
+        #     msg.attach(part)
+        # smtp = smtplib.SMTP('smtp.gmail.com', 587)
+        # smtp.ehlo()
+        # smtp.starttls()
+        # smtp.ehlo()
+        # smtp.login("noobbobby241@gmail.com", "cliwqftyqujpisht")
+        # smtp.sendmail("noobbobby241@gmail.com", [email], msg.as_string())
+        # print("Email Sent")
         return redirect("/success")
     return render_template('index.html')
 @app.route('/success')
 def success():
-    return render_template("success.html")
+     return render_template('success.html')
+@app.route('/download')
+def download():
+    return send_file('output.zip', as_attachment=True)
+def cleanup_directory():
+    test = os.listdir()
+    for item in test:
+        if item.endswith(".mp3"):
+            os.remove(os.path.join(os.getcwd(), item))
+        if item.endswith(".zip"):
+            os.remove(os.path.join(os.getcwd(), item))
 if __name__=='__main__':
+    cleanup_directory()
     app.run(host="0.0.0.0",port=5000)
