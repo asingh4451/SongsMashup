@@ -8,12 +8,12 @@ from pytube import YouTube
 from pydub import AudioSegment
 from pydub.utils import make_chunks
 import os
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email.utils import COMMASPACE, formatdate
-from email import encoders
-from zipfile import ZipFile
-from youtube_search import YoutubeSearch
+# from email.mime.multipart import MIMEMultipart
+# from email.mime.base import MIMEBase
+# from email.utils import COMMASPACE, formatdate
+# from email import encoders
+# from zipfile import ZipFile
+# from youtube_search import YoutubeSearch
 import pandas as pd
 app=Flask(__name__)
 @app.route('/',methods=['GET','POST'])
@@ -105,4 +105,5 @@ def cleanup_directory():
             os.remove(os.path.join(os.getcwd(), item))
 if __name__=='__main__':
     cleanup_directory()
+    app.debug=True
     app.run(host="0.0.0.0",port=5000)
