@@ -34,7 +34,7 @@ def index():
             #print(yt.title)
             #if(yt.length<100):
             # extract only audio
-            video = yt.streams.filter(only_audio=True).first()
+            video = yt.streams.filter(file_extension='mp4',only_audio=True).first()
         # download the file
             out_file = video.download()
         # save the file
