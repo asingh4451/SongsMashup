@@ -29,7 +29,7 @@ def index():
             data['url_suffix'][i]="https://www.youtube.com"+data['url_suffix'][i]
         links=data['url_suffix']
         for i in links:
-            yt = YouTube(str(i),use_oauth=True,allow_oauth_cache=True)
+            yt = YouTube(str(i))
             #print(yt.title)
             #if(yt.length<100):
             # extract only audio
