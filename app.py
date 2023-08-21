@@ -30,7 +30,7 @@ def index():
         links=data['url_suffix']
         for i in links:
             #yt = YouTube(str(i))
-            yt=Youtube(i)
+            yt=YouTube(i)
             #print(yt.title)
             #if(yt.length<100):
             # extract only audio
