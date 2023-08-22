@@ -57,10 +57,11 @@ def process_audio(singer, Number_vid, duration):
     dir = os.getcwd()
     print(dir)
     test = os.listdir(dir)
+    zip_file_path = "/opt/render/project/src/output.zip"
     for item in test:
         if item.endswith(".mp4") or item.endswith(".wav"):
             os.remove(os.path.join(dir, item))
-    with zipfile.ZipFile('output.zip', 'w') as zipf:
+    with zipfile.ZipFile(zip_file_path, 'w') as zipf:
         zipf.write('output.mp3')
 
 @app.route('/success')
@@ -69,7 +70,7 @@ def success():
 
 @app.route('/download')
 def download():
-    zip_path = os.path.join(os.getcwd(), 'output.zip')
+    zip_path = "/opt/render/project/src/output.zip"
     return send_file(zip_path, as_attachment=True)
 if __name__ == '__main__':
     app.debug = True
