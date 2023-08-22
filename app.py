@@ -55,6 +55,7 @@ def process_audio(singer, Number_vid, duration):
         merged += chunk
     merged.export('output.mp3', format="mp3")
     dir = os.getcwd()
+    print(dir)
     test = os.listdir(dir)
     for item in test:
         if item.endswith(".mp4") or item.endswith(".wav"):
