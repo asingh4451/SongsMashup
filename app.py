@@ -1,4 +1,4 @@
-from flask import Flask,request,redirect,render_template,send_file,after_this_request
+from flask import Flask,request,redirect,render_template,send_file
 import zipfile
 import numpy as np
 import concurrent.futures
@@ -100,18 +100,18 @@ def success():
      return render_template('success.html')
 @app.route('/download')
 def download():
-    @after_this_request
-    def cleanup(response):
-        cleanup_directory()
-        return response
+    #@after_this_request
+    #def cleanup(response):
+        #cleanup_directory()
+        #return response
     return send_file('output.zip', as_attachment=True)
-def cleanup_directory():
-    test = os.listdir()
-    for item in test:
-        if item.endswith(".mp3"):
-            os.remove(os.path.join(os.getcwd(), item))
-        if item.endswith(".zip"):
-            os.remove(os.path.join(os.getcwd(), item))
+#def cleanup_directory():
+    #test = os.listdir()
+    #for item in test:
+        #if item.endswith(".mp3"):
+            #os.remove(os.path.join(os.getcwd(), item))
+        #if item.endswith(".zip"):
+            #os.remove(os.path.join(os.getcwd(), item))
 if __name__=='__main__':
     app.debug=True
     app.run(host="0.0.0.0",port=5000)
