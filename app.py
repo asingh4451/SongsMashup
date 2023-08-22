@@ -23,7 +23,7 @@ def index():
         singer=request.form['singer']
         Number_vid=int(request.form['Number_vid'])
         duration=int(request.form['duration'])
-        Email=request.form['Email']
+        Email=request.form['email']
         with concurrent.futures.ThreadPoolExecutor() as executor:
             executor.submit(process_audio, singer, Number_vid, duration,Email)
         # process_audio(singer,Number_vid,duration)
