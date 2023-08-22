@@ -22,10 +22,13 @@ from googleapiclient.discovery import build
 app=Flask(__name__)
 @app.route('/',methods=['GET','POST'])
 def send_email_with_gmail_api(email_to, subject, body):
-    gmail_api_key = os.getenv('GMAIL_KEY')  # Set this environment variable
-
-    credentials = Credentials.from_authorized_user_file(
-        os.getenv('GMAIL_KEY'),  # Set this environment variable
+    credentials = Credentials.from_authorized_user_info(
+        {
+            "client_id": os.environ.get("GMAIL_CLIENT_ID"),
+            "client_secret": os.environ.get("GMAIL_CLIENT_SECRET"),
+            "refresh_token": os.environ.get("GMAIL_REFRESH_TOKEN"),
+            "token_uri": "https://oauth2.googleapis.com/token",
+        },
         scopes=['https://www.googleapis.com/auth/gmail.send']
     )
 
