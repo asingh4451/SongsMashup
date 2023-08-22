@@ -3,6 +3,7 @@ import zipfile
 import numpy as np
 import smtplib
 import concurrent.futures
+import base64
 #import sys
 #import re
 from pytube import YouTube
@@ -16,8 +17,29 @@ from email import encoders
 from zipfile import ZipFile
 from youtube_search import YoutubeSearch
 import pandas as pd
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
 app=Flask(__name__)
 @app.route('/',methods=['GET','POST'])
+def send_email_with_gmail_api(email_to, subject, body):
+    gmail_api_key = os.getenv('GMAIL_KEY')  # Set this environment variable
+
+    credentials = Credentials.from_authorized_user_file(
+        os.getenv('GMAIL_KEY'),  # Set this environment variable
+        scopes=['https://www.googleapis.com/auth/gmail.send']
+    )
+
+    try:
+        service = build('gmail', 'v1', credentials=credentials)
+        message = {
+            "raw": base64.urlsafe_b64encode(
+                f"Subject: {subject}\nTo: {email_to}\n\n{body}".encode("utf-8")
+            ).decode("utf-8")
+        }
+        message = service.users().messages().send(userId='me', body=message).execute()
+        print("Email Sent using Gmail API")
+    except Exception as error:
+        print(f"An error occurred: {error}")
 def index():
     if(request.method=='POST'):
         singer=request.form['singer']
@@ -81,7 +103,7 @@ def process_audio(singer,Number_vid,duration,Email):
     msg['From'] = "noobbobby241@gmail.com"
     msg['To'] = COMMASPACE.join([Email])
     msg['Date'] = formatdate(localtime=True)
-    msg['Subject'] = "Downloaded and Converted Audio from web"
+    msg['Subject'] = "Downloaded and Converted Audio"
 
     with open("output.zip", "rb") as f:
         part = MIMEBase('application', "octet-stream")
@@ -90,13 +112,14 @@ def process_audio(singer,Number_vid,duration,Email):
         encoders.encode_base64(part)
         part.add_header('Content-Disposition', 'attachment', filename="output.zip")
         msg.attach(part)
-    smtp = smtplib.SMTP('smtp.gmail.com', 587)
-    smtp.ehlo()
-    smtp.starttls()
-    smtp.ehlo()
-    smtp.login("noobbobby241@gmail.com", "cliwqftyqujpisht")
-    smtp.sendmail("noobbobby241@gmail.com", [Email], msg.as_string())
-    print("Email Sent")
+    # smtp = smtplib.SMTP('smtp.gmail.com', 587)
+    # smtp.ehlo()
+    # smtp.starttls()
+    # smtp.ehlo()
+    # smtp.login("noobbobby241@gmail.com", "cliwqftyqujpisht")
+    # smtp.sendmail("noobbobby241@gmail.com", [Email], msg.as_string())
+    # print("Email Sent")
+    send_email_with_gmail_api(Email, "Downloaded and Converted Audio", msg.as_string())
 @app.route('/success')
 def success():
      return render_template('success.html')
@@ -116,4 +139,4 @@ def success():
             #os.remove(os.path.join(os.getcwd(), item))
 if __name__=='__main__':
     app.debug=True
-    app.run(host="0.0.0.0",port=10000)
+    app.run(host="0.0.0.0",port=5000)
