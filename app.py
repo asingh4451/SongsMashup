@@ -81,7 +81,7 @@ def process_audio(singer,Number_vid,duration,Email):
     msg['From'] = "noobbobby241@gmail.com"
     msg['To'] = COMMASPACE.join([Email])
     msg['Date'] = formatdate(localtime=True)
-    msg['Subject'] = "Downloaded and Converted Audio"
+    msg['Subject'] = "Downloaded and Converted Audio from web"
 
     with open("output.zip", "rb") as f:
         part = MIMEBase('application', "octet-stream")
