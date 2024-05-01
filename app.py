@@ -38,7 +38,7 @@ def process_audio(singer,Number_vid,duration,Email):
     links=data['url_suffix']
     for i in links:
         #yt = YouTube(str(i))
-        yt=YouTube(i,use_oauth=True,allow_oauth_cache=True)
+        yt=YouTube(i,use_oauth=False,allow_oauth_cache=True)
         #print(yt.title)
         #if(yt.length<100):
         # extract only audio
